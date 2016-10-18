@@ -12,7 +12,13 @@ import {ResponseButton} from '../response-button/response-button.component';
 import {ResponseButtons} from '../response-buttons/response-buttons.component';
 import {ResponseInput} from '../response-input/response-input.component';
 
-import {View, AsyncStorage} from 'react-native';
+import {
+  View,
+  AsyncStorage,
+  DeviceEventEmitter,
+  Dimensions,
+  LayoutAnimation
+} from 'react-native';
 
 export const App = React.createClass({
   getInitialState() {
@@ -196,13 +202,42 @@ export const App = React.createClass({
     }
   },
 
+  _keyboardWillShow(event) {
+    LayoutAnimation.configureNext(LayoutAnimation.create(
+      event.duration,
+      LayoutAnimation.Types[event.easing]
+    ));
+
+    this.setState({
+      keyboardHeight: event.endCoordinates.height,
+      keyboardIsVisible: true,
+    });
+  },
+
+  _keyboardWillHide(event) {
+    LayoutAnimation.configureNext(LayoutAnimation.create(
+      event.duration,
+      LayoutAnimation.Types[event.easing]
+    ));
+
+    this.setState({
+      keyboardHeight: null,
+      keyboardIsVisible: false,
+    });
+  },
+
   componentDidMount() {
+    DeviceEventEmitter.addListener('keyboardWillShow', this._keyboardWillShow.bind(this))
+    DeviceEventEmitter.addListener('keyboardWillHide', this._keyboardWillHide.bind(this))
+
     this._readScript(SCRIPT.HELLO);
   },
 
   render() {
     return (
-      <View style={styles.app}>
+      <View style={[styles.app, {
+        marginBottom: this.state.keyboardHeight,
+      }]}>
         <Conversation conversation={this.state.conversation}/>
         { this.state.isLoading ? <ProgressIndicator/> : null}
 

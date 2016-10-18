@@ -11,6 +11,7 @@ import {ConversationItem} from '../conversation-item/conversation-item.component
 export const Conversation = React.createClass({
   propTypes: {
     conversation: React.PropTypes.array,
+    isOffset: React.PropTypes.bool,
   },
 
   componentDidUpdate() {
@@ -28,11 +29,14 @@ export const Conversation = React.createClass({
   },
 
   render() {
+    let contentOffset = this.props.isOffset ? { x: 0, y: 100 } : null;
+
     return (
       <ScrollView contentContainerStyle={[styles.conversation, {
         width: SCREEN_WIDTH,
         // height: SCREEN_HEIGHT,
       }]}
+      contentOffset={contentOffset}
       alwaysBounceVertical={false}
       showsVerticalScrollIndicator={false}>
         {this._presentConversation(this.props.conversation).map((item, index) => {
