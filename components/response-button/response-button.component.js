@@ -12,7 +12,7 @@ export const ResponseButton = React.createClass({
   render() {
     return (
       <Button onPress={this.props.onPress}
-      style={this.props.index === 0 ? { marginTop: 0 } : null}
+      noMarginTop={this.props.index === 0}
       text={this.props.response}
       icon={this.props.icon}/>
     );

@@ -10,6 +10,7 @@ export const styles = React.StyleSheet.create({
     borderTopLeftRadius: variables.borderRadius,
     borderBottomLeftRadius: variables.borderRadius,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   buttonFirst: {
     marginTop: 0,

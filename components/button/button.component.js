@@ -6,7 +6,8 @@ export const Button = React.createClass({
   propTypes: {
     onPress: React.PropTypes.func,
     icon: React.PropTypes.string,
-    style: React.PropTypes.object,
+    noMarginTop: React.PropTypes.bool,
+    noMarginLeft: React.PropTypes.bool,
     text: React.PropTypes.string,
   },
 
@@ -14,15 +15,15 @@ export const Button = React.createClass({
     const imageSources = {
       'icon-yes': require('./icon-yes.png'),
       'icon-no': require('./icon-no.png'),
+      'icon-close': require('./icon-close.png'),
     };
-
-    console.log('this.props', this.props);
 
     return (
       <TouchableOpacity onPress={this.props.onPress}
       style={[
         styles.button,
-        this.props.style,
+        this.props.noMarginTop ? { marginTop: 0 } : null,
+        this.props.noMarginLeft ? { marginLeft: 0 } : null,
       ]}>
         <Text style={styles.buttonText}>{this.props.text}</Text>
 

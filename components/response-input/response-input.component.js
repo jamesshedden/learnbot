@@ -1,6 +1,6 @@
 import React from 'react';
 import {styles} from './response-input.styles';
-import {TextInput, View, Animated} from 'react-native';
+import {TextInput, View, Animated, Image} from 'react-native';
 
 export const ResponseInput = React.createClass({
   propTypes: {
@@ -46,6 +46,8 @@ export const ResponseInput = React.createClass({
           onChangeText={(option) => this.props.onChange(option)}
           placeholder='Write your name'
           placeholderTextColor='white'/>
+          <Image style={styles.responseInputButtonIcon}
+          source={require('./icon-write.png')}/>
         </View>
       </Animated.View>
     );

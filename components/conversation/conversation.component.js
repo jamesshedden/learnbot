@@ -14,10 +14,6 @@ export const Conversation = React.createClass({
     isOffset: React.PropTypes.bool,
   },
 
-  componentDidUpdate() {
-    // console.log('Conversation componentDidUpdate', this.props.conversation);
-  },
-
   _presentConversation(conversation) {
     conversation.map((item, index) => {
       const currentItemSender =  _.get(item, 'sender');
@@ -34,7 +30,7 @@ export const Conversation = React.createClass({
     return (
       <ScrollView contentContainerStyle={[styles.conversation, {
         width: SCREEN_WIDTH,
-        // height: SCREEN_HEIGHT,
+        height: SCREEN_HEIGHT,
       }]}
       contentOffset={contentOffset}
       alwaysBounceVertical={false}

@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Animated} from 'react-native';
 
+import {variables} from '../../variables';
 import {styles} from './response-buttons.styles';
 
 export const ResponseButtons = React.createClass({
@@ -22,7 +23,7 @@ export const ResponseButtons = React.createClass({
       ),
       Animated.timing(
         this.state.heightAnimValue,
-        {toValue: 65 * this.props.responses.length, duration: 300},
+        {toValue: variables.buttonHeight * this.props.responses.length, duration: 300},
       ),
     ]).start();
   },

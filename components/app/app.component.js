@@ -11,13 +11,13 @@ import {ProgressIndicator} from '../progress-indicator/progress-indicator.compon
 import {ResponseButton} from '../response-button/response-button.component';
 import {ResponseButtons} from '../response-buttons/response-buttons.component';
 import {ResponseInput} from '../response-input/response-input.component';
+import {LibraryButton} from '../library-button/library-button.component';
 
 import {
   View,
   AsyncStorage,
-  DeviceEventEmitter,
-  Dimensions,
-  LayoutAnimation
+  Keyboard,
+  LayoutAnimation,
 } from 'react-native';
 
 export const App = React.createClass({
@@ -40,8 +40,28 @@ export const App = React.createClass({
     });
   },
 
+  _openLibrary() {
+    this.setState({
+      dialogContent: 'library',
+    });
+
+    this._openDialog();
+  },
+
+  _openArticle() {
+    this.setState({
+      dialogContent: 'article',
+    });
+
+    this._openDialog();
+  },
+
   _closeDialog() {
     this.setState({dialog: false});
+  },
+
+  _finishReading() {
+    this._closeDialog();
 
     this._sendMessages(['I\'ve finished reading'], 'me').then(() => {
       this._readScript(SCRIPT.QUESTION_INTEREST);
@@ -101,12 +121,12 @@ export const App = React.createClass({
   _setResponseButtons(responses) {
     const responseButtons = [];
 
-    function respond(response, shouldOpenDialog) {
+    function respond(response, shouldOpenArticle) {
       this.setState({ showResponseButtons: false });
 
       this._sendMessages(response.messages, 'me').then(() => {
-        if (shouldOpenDialog) {
-          this._openDialog();
+        if (shouldOpenArticle) {
+          this._openArticle();
         } else {
           setTimeout(() => {
             this._readScript(response.nextDialogOption);
@@ -116,13 +136,13 @@ export const App = React.createClass({
     }
 
     responses.map((response, index) => {
-      const shouldOpenDialog = response === SCRIPT.YES_TO_SUGGEST_TOPIC ?
+      const shouldOpenArticle = response === SCRIPT.YES_TO_SUGGEST_TOPIC ?
         true : false;
 
       responseButtons.push(
         <ResponseButton key={index} index={index}
         icon={response.icon}
-        onPress={respond.bind(this, response, shouldOpenDialog)}
+        onPress={respond.bind(this, response, shouldOpenArticle)}
         response={response.messages.join('')}/>
       );
     });
@@ -227,17 +247,24 @@ export const App = React.createClass({
   },
 
   componentDidMount() {
-    DeviceEventEmitter.addListener('keyboardWillShow', this._keyboardWillShow.bind(this))
-    DeviceEventEmitter.addListener('keyboardWillHide', this._keyboardWillHide.bind(this))
+    Keyboard.addListener('keyboardWillShow', this._keyboardWillShow);
+    Keyboard.addListener('keyboardWillHide', this._keyboardWillHide);
 
     this._readScript(SCRIPT.HELLO);
   },
 
   render() {
+    const DIALOG_CLOSE = {
+      'article': this._finishReading,
+      'library': this._closeDialog,
+    };
+
     return (
       <View style={[styles.app, {
         marginBottom: this.state.keyboardHeight,
       }]}>
+        <LibraryButton onPress={this._openLibrary}/>
+
         <Conversation conversation={this.state.conversation}/>
         { this.state.isLoading ? <ProgressIndicator/> : null}
 
@@ -252,7 +279,8 @@ export const App = React.createClass({
         : null }
 
         { this.state.dialog ?
-          <Dialog closeDialog={this._closeDialog}
+          <Dialog closeDialog={DIALOG_CLOSE[this.state.dialogContent]}
+          dialogContent={this.state.dialogContent}
           dialogAction={this._dialogAction}
           webViewSource={{ uri: this.state.webViewSource }}/>
         : null }

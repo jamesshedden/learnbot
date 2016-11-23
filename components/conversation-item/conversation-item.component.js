@@ -43,7 +43,6 @@ export const ConversationItem = React.createClass({
   },
 
   componentDidMount() {
-    // console.log('ConversationItem componentDidUpdate', this.props.item);
     this._positionAnim(this.props.sender);
     this._opacityAnim();
   },

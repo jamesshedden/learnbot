@@ -57,10 +57,6 @@ export const ProgressIndicator = React.createClass({
     ]).start();
   },
 
-  componentDidUpdate() {
-    // console.log('ProgressIndicator componentDidUpdate', this.props.sender);
-  },
-
   render() {
     const {
       rotateAnimValue,
