@@ -30,7 +30,7 @@ export const Conversation = React.createClass({
     return (
       <ScrollView contentContainerStyle={[styles.conversation, {
         width: SCREEN_WIDTH,
-        height: SCREEN_HEIGHT,
+        // height: SCREEN_HEIGHT,
       }]}
       contentOffset={contentOffset}
       alwaysBounceVertical={false}
